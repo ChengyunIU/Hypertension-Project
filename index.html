@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <title>Project Prevelance of Hypertension</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./index.js"></script>
+    <style>
+        body {
+            background-color: antiquewhite;
+            font-family: Georgia;
+            width: 80%;
+            padding: 15px 9.5%;
+            margin: 0;
+        }
+
+        svg {
+            width: 100%;
+            min-height: 800px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        #tooltip {
+            font-family: Georgia;
+            font-size: 12px;
+            position: absolute;
+            text-align: left;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .x-axis-title {
+            font-size: 12px;
+        }
+
+        .y-axis-title {
+            font-size: 12px;
+        }
+
+        .radio-div {
+            position: absolute;
+            right: calc(10% + 20px);
+            top: 27%;
+            text-align: right;
+        }
+
+        .pagetitle {
+            font-size: 28px;
+            margin-left:10px;
+            font-family: Georgia;
+            font-weight: bold;
+        }
+
+        .pagetext {
+            font-size: 18px;
+            margin-left:15px;
+            margin-right:15px;
+            font-family: Georgia;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div>
+        <div class="pagetitle" style="float: left;">Prevalence of Hypertension from 2011 to 2018</div>
+        <div style="float: right;">
+            <form>
+                <input class="pagebutton" type="button" value="Documentation" onclick="window.location.href='about.html'" />
+            </form>
+        </div>
+        <br /><br />
+        <div class="pagetext">
+            <p>
+                The purpose of this project is to present the prvalence of hypertension in recent years. 
+                The data of this project comes from the National Health and Nutrition Examination Surveys (NHANES)
+                Individuals were considered as hypertension if their systolic blood pressure > 130mm Hg 
+                or their diastolic blood pressure > 80mm Hg. Demographic variables such as gender, age, race, 
+                education level and income level are selected from the original demographic data set. 
+                The age was treated as a categorical variables with 4 categories (20-39, 40-59, 60-79, and 80+).
+            </p>
+            <p>
+                <a href="https://youtu.be/Cf0_7cCSQ9o">Click here for demonstration of the map. </a>
+            </p>
+        </div>
+        <div class="radio-div">
+           <div>
+            <label>Year Options:</label>
+            <select id="year-select">
+                <option value="2011/2012">2011/2012</option>
+                <option value="2013/2014">2013/2014</option>
+                <option value="2015/2016">2015/2016</option>
+                <option value="2017/2018">2017/2018</option>
+            </select>
+           </div>
+
+            <input class='sel' type="radio" name="sel" value="age" checked='checked' /> Age
+            <input class='sel' type="radio" name="sel" value="edu" /> Education
+            <input class='sel' type="radio" name="sel" value="income" /> Income
+            <input class='sel' type="radio" name="sel" value="race" /> Race
+           
+        </div>
+        <svg id="svg"></svg>
+    </div>
+    <div id="tooltip" style="display: none;"></div>
+</body>
+
+</html>

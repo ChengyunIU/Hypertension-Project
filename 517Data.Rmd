@@ -1,0 +1,77 @@
+---
+title: "517projectDATA"
+author: "Chengyun Li"
+date: "2022-11-27"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library}
+library(haven)
+library(gtsummary)
+library(naniar)
+library(dplyr)
+```
+
+## Demographic Data
+```{r DemographicData, warning=FALSE, message=FALSE}
+Demo <- read_xpt(file = "DEMO_I.XPT")
+#Selected variables in Demo:
+#SEQN - Respondent sequence number
+#RIAGENDR - Gender (1=Male, 2=Female)
+#RIDAGEYR - Age in years at screening(0-79, 80: 80 years of age and over)
+#RIDRETH3 - Race/Hispanic origin w/ NH Asian (1=Mexican American, 2=Other Hispanic, 3=Non-Hispanic White, 4=Non-Hispanic Black, 6= Non-Hispanic Asian, 7=Other Race - Including Multi-Racial)
+#DMDEDUC2 - Education level - Adults 20+
+#INDFMIN2 - Annual family income
+var.demo <- c("SEQN", "RIAGENDR", "RIDAGEYR", "RIDRETH3", "DMDEDUC2", "INDFMIN2")
+Demo <- Demo[, var.demo]
+```
+
+## Blood Pressure Data
+```{r BloodPressureData, warning=FALSE, message=FALSE}
+BP <- read_xpt(file = "BPX_I.XPT")
+#Selected variables in Demo:
+#SEQN - Respondent sequence number
+#BPXPLS - 60 sec. pulse (30 sec. pulse * 2)
+#BPXPULS - Pulse regular or irregular? (1=Regular, 2=Irregular)
+#BPXSY1 - Systolic: Blood pres (1st reading) mm Hg
+#BPXDI1 - Diastolic: Blood pres (1st reading) mm Hg
+var.bp <- c("SEQN", "BPXPLS", "BPXPULS", "BPXSY1", "BPXDI1")
+BP <- BP[, var.bp]
+
+```
+
+## Blood Pressure Data
+```{r}
+HDL <- read_xpt(file = "HDL_I.XPT") %>%
+  filter(!is.na(LBDHDD)) %>%
+  select(SEQN, LBDHDD)
+TRI <- read_xpt(file= "TRIGLY_I.XPT") %>%
+  filter(!is.na(LBDLDL)) %>%
+  select(SEQN, LBXTR, LBDLDL)
+```
+
+## Merged Data
+```{r mergeData, warning=FALSE, message=FALSE}
+n <- length(unique(intersect(Demo$SEQN, BP$SEQN))) #8704
+Data <- merge(x = BP, y = Demo, by = "SEQN", all.x = TRUE)
+Data <- merge(x = Data, y = HDL, by = "SEQN", all.x = TRUE)
+Data <- merge(x = Data, y = TRI, by = "SEQN", all.x = TRUE)
+Data <- Data[Data$RIDAGEYR>20,] %>%
+  filter(!is.na(BPXSY1)) %>%
+  mutate(HBP=if_else((BPXSY1>130|BPXDI1>80), 1, 0))
+tbl_summary(Data)
+
+write.csv(Data, file = "Data1516.csv", row.names=FALSE)
+getwd()
+
+test <- read.csv(file="Data1112.csv")
+tbl_summary(test)
+```
+
+
+
+
